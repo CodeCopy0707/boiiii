@@ -1,15 +1,14 @@
-
 import telebot
 import requests
 import re
 import json
 from flask import Flask
 import threading
+import time
 
 # Telegram Bot Token
 BOT_TOKEN = "7864659740:AAG-sRx4DonxufjGD5qoLLegHUQV0c_MSng"
-ADMIN_CHAT_ID = 7498724465
-# Admin's chat ID
+ADMIN_CHAT_ID = 7498724465  # Admin's chat ID
 bot = telebot.TeleBot(BOT_TOKEN)
 
 # Flask app for keep-alive
@@ -74,12 +73,31 @@ def handle_message(message):
 def home():
     return "Bot is running!"
 
+# Function to keep the app alive
+def keep_alive():
+    while True:
+        try:
+            # Send a GET request to the Flask endpoint
+            requests.get("http://127.0.0.1:8080/")
+            print("Keep-alive ping sent.")
+        except requests.exceptions.RequestException as e:
+            print(f"Error in keep-alive ping: {e}")
+        time.sleep(49)  # Send a request every 60 seconds
+
 # Run the bot in a separate thread
 def start_bot():
     bot.infinity_polling()
 
+# Run keep-alive function in a separate thread
+def start_keep_alive():
+    threading.Thread(target=keep_alive, daemon=True).start()
+
 if __name__ == "__main__":
     # Start the bot in a separate thread
     threading.Thread(target=start_bot).start()
+
+    # Start the keep-alive function
+    start_keep_alive()
+
     # Run Flask app
     app.run(host="0.0.0.0", port=8080)
