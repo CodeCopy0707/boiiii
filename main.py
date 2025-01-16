@@ -7,8 +7,9 @@ from flask import Flask
 import threading
 
 # Telegram Bot Token
-BOT_TOKEN = "7864659740:AAG-sRx4DonxufjGD5qoLLegHUQV0c_MSng"
-ADMIN_CHAT_ID = 7498724465  # Admin's chat ID
+BOT_TOKEN = ""
+ADMIN_CHAT_ID =
+# Admin's chat ID
 bot = telebot.TeleBot(BOT_TOKEN)
 
 # Flask app for keep-alive
