@@ -94,3 +94,13 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Keep sending a request to your deployed server every 30 seconds to keep it alive
+setInterval(async () => {
+  try {
+    await axios.get(`https://boiiii.onrender.com`);
+    console.log('Ping sent to keep the server alive!');
+  } catch (error) {
+    console.error('Error while sending keep-alive ping:', error.message);
+  }
+}, 30000); // 30 seconds interval
