@@ -62,7 +62,7 @@ def handle_message(message):
     conversation_history = [{"role": "user", "content": user_input}]
     try:
         bot.send_chat_action(chat_id, "typing")
-        response = generate(prompt=conversation_history, system_prompt="Be Helpful and Friendly", model="Phind-34B")
+        response = generate(prompt=conversation_history, system_prompt="Be Helpful,Funny and Friendly", model="Phind-34B")
         bot.send_message(chat_id, response)
     except Exception as e:
         bot.send_message(chat_id, "An error occurred while processing your request.")
