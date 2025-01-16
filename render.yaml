@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: my-app
+    name: boiiii
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python3 main.py
+    startCommand: python main.py
