@@ -2,9 +2,8 @@ import telebot
 import requests
 import re
 import json
-from flask import Flask
+from flask import Flask, request
 import threading
-import time
 
 # Telegram Bot Token
 BOT_TOKEN = "7864659740:AAG-sRx4DonxufjGD5qoLLegHUQV0c_MSng"
@@ -82,22 +81,28 @@ def keep_alive():
             print("Keep-alive ping sent.")
         except requests.exceptions.RequestException as e:
             print(f"Error in keep-alive ping: {e}")
-        time.sleep(49)  # Send a request every 60 seconds
+        time.sleep(60)  # Send a request every 60 seconds
 
-# Run the bot in a separate thread
-def start_bot():
-    bot.infinity_polling()
+# Set webhook
+@app.route(f"/{BOT_TOKEN}", methods=["POST"])
+def webhook():
+    json_str = request.get_data().decode("UTF-8")
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK"
 
 # Run keep-alive function in a separate thread
 def start_keep_alive():
     threading.Thread(target=keep_alive, daemon=True).start()
 
 if __name__ == "__main__":
-    # Start the bot in a separate thread
-    threading.Thread(target=start_bot).start()
-
     # Start the keep-alive function
     start_keep_alive()
+
+    # Set webhook for your bot
+    webhook_url = f"https://<your-app-name>.onrender.com/{BOT_TOKEN}"  # Replace <your-app-name> with your Render app name
+    bot.remove_webhook()
+    bot.set_webhook(url=webhook_url)
 
     # Run Flask app
     app.run(host="0.0.0.0", port=8080)
