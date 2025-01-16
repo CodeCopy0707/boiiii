@@ -8,7 +8,7 @@ import threading
 
 # Telegram Bot Token
 BOT_TOKEN = ""
-ADMIN_CHAT_ID =
+ADMIN_CHAT_ID = ""
 # Admin's chat ID
 bot = telebot.TeleBot(BOT_TOKEN)
 
