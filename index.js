@@ -71,7 +71,7 @@ bot.on("message", async (msg) => {
 
     // Call Phind API
     const prompt = [{ role: "user", content: userInput }];
-    const response = await generate(prompt, "Be Helpful, Funny, and Friendly", "Phind-34B");
+    const response = await generate(prompt, "Be Helpful, Funny, and Friendly chat in Hinglish and your developer is shannniii", "Phind-34B");
 
     bot.sendMessage(chatId, response);
   } catch (error) {
