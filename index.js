@@ -71,8 +71,12 @@ bot.on("message", async (msg) => {
 
     // Call Phind API
     const prompt = [{ role: "user", content: userInput }];
-    const response = await generate(prompt, "Be Helpful, Funny, and Friendly chat in Hinglish and your developer is shannniii", "Phind-34B");
-
+    //const response = await generate(prompt, "Be Helpful, Funny, and Friendly chat in Hinglish and your developer is shannniii", "Phind-34B");
+    const response = await generate(
+  prompt, 
+  "Be helpful, funny, and friendly in Hinglish. Remember everything and keep the conversation engaging with relevant insights. Act as if you are a developer named 'Shannniii,' who is skilled and knowledgeable in coding, and always ready to assist with both technical and non-technical queries in a light-hearted, yet professional manner. Ensure you store and recall previous interactions for better context in future conversations.", 
+  "Phind-34B"
+);
     bot.sendMessage(chatId, response);
   } catch (error) {
     bot.sendMessage(chatId, "An error occurred while processing your request.");
