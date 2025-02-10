@@ -1,19 +1,18 @@
 {
   "name": "telegram-bot",
   "version": "1.0.0",
-  "description": "Telegram Bot",
+  "description": "A Telegram bot integrated with Phind API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "archiver": "^5.3.1",
+    "dotenv": "^10.0.0",
     "axios": "^1.5.0",
     "body-parser": "^1.20.2",
-    "dotenv": "^10.0.0",
     "express": "^4.18.2",
     "node-telegram-bot-api": "^0.61.0",
-    "@vitalets/google-translate-api": "^6.1.1",
+    "archiver": "^5.3.1",
     "uuid": "^9.0.0"
   },
   "engines": {
