@@ -224,7 +224,7 @@ app.listen(PORT, () => {
 // Keep sending a request to your deployed server every 30 seconds to keep it alive
 setInterval(async () => {
   try {
-    await axios.get(`https://your-deployed-url.onrender.com`);
+    await axios.get(`https://boiiii.onrender.com`);
     console.log("Ping sent to keep the server alive!");
   } catch (error) {
     console.error("Error while sending keep-alive ping:", error.message);
