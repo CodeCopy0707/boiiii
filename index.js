@@ -7,6 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
 const { v4: uuidv4 } = require("uuid");
+const translate = require("@vitalets/google-translate-api");
 
 // Environment variables
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -99,20 +100,160 @@ bot.on("message", async (msg) => {
   }
 });
 
-// Command: Generate a joke using AI
-bot.onText(/\/joke/, async (msg) => {
+// Feature 1: Help Menu
+bot.onText(/\/help/, (msg) => {
   const chatId = msg.chat.id;
 
+  const helpMessage = `
+Available Commands:
+/start - Start the bot
+/help - Show this help menu
+/joke - Get a funny joke
+/weather <city> - Get weather information for a city
+/generate_webpage - Generate a basic webpage
+/project_structure - Generate a project folder structure
+/clear_history - Clear chat history
+/translate <text> - Translate text into English
+/remind <time> <message> - Set a reminder
+/quote - Get a motivational quote
+/math <expression> - Solve a math expression
+/wiki <query> - Search Wikipedia
+/github <username> - Get GitHub profile info
+/crypto <currency> - Get cryptocurrency prices
+/movie <title> - Get movie details
+/news - Get the latest news
+/poll <question> <options> - Create a poll
+/qrcode <text> - Generate a QR code
+/timer <seconds> - Set a timer
+/game - Play a simple game
+/chatbox - Display a chatbox with all commands
+  `;
+
+  bot.sendMessage(chatId, helpMessage);
+});
+
+// Feature 2: Chatbox
+bot.onText(/\/chatbox/, (msg) => {
+  const chatId = msg.chat.id;
+
+  const chatboxMessage = `
+🤖 *Chatbox Commands* 🤖
+
+/start - Start the bot
+/help - Show help menu
+/joke - Get a funny joke
+/weather <city> - Get weather info
+/generate_webpage - Generate a webpage
+/project_structure - Generate project structure
+/clear_history - Clear chat history
+/translate <text> - Translate text
+/remind <time> <message> - Set a reminder
+/quote - Get a motivational quote
+/math <expression> - Solve math
+/wiki <query> - Search Wikipedia
+/github <username> - Get GitHub info
+/crypto <currency> - Get crypto prices
+/movie <title> - Get movie details
+/news - Get latest news
+/poll <question> <options> - Create a poll
+/qrcode <text> - Generate QR code
+/timer <seconds> - Set a timer
+/game - Play a simple game
+  `;
+
+  bot.sendMessage(chatId, chatboxMessage, { parse_mode: "Markdown" });
+});
+
+// Feature 3: Translation
+bot.onText(/\/translate (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const text = match[1];
+
   try {
-    const jokePrompt = [{ role: "user", content: "Tell me a funny joke." }];
-    const jokeResponse = await generate(jokePrompt, "Be funny and creative.", "Phind-34B");
-    bot.sendMessage(chatId, jokeResponse);
+    const translation = await translate(text, { to: "en" });
+    bot.sendMessage(chatId, `Translation: ${translation.text}`);
   } catch (error) {
-    bot.sendMessage(chatId, "Could not generate a joke. Please try again.");
+    bot.sendMessage(chatId, "Could not translate the text. Please try again.");
   }
 });
 
-// Command: Generate basic webpage code and host it
+// Feature 4: Reminders
+bot.onText(/\/remind (\d+) (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const time = parseInt(match[1], 10) * 1000; // Convert seconds to milliseconds
+  const message = match[2];
+
+  setTimeout(() => {
+    bot.sendMessage(chatId, `Reminder: ${message}`);
+  }, time);
+
+  bot.sendMessage(chatId, `Reminder set for ${match[1]} seconds.`);
+});
+
+// Feature 5: Motivational Quotes
+bot.onText(/\/quote/, async (msg) => {
+  const chatId = msg.chat.id;
+
+  try {
+    const response = await axios.get("https://api.quotable.io/random");
+    const quote = response.data;
+    bot.sendMessage(chatId, `"${quote.content}" - ${quote.author}`);
+  } catch (error) {
+    bot.sendMessage(chatId, "Could not fetch a quote. Please try again.");
+  }
+});
+
+// Feature 6: Math Solver
+bot.onText(/\/math (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const expression = match[1];
+
+  try {
+    const result = eval(expression); // Use a safer math library in production
+    bot.sendMessage(chatId, `Result: ${result}`);
+  } catch (error) {
+    bot.sendMessage(chatId, "Invalid math expression. Please try again.");
+  }
+});
+
+// Feature 7: Wikipedia Search
+bot.onText(/\/wiki (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const query = match[1];
+
+  try {
+    const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+    const data = response.data;
+    bot.sendMessage(chatId, `${data.title}\n\n${data.extract}`);
+  } catch (error) {
+    bot.sendMessage(chatId, "Could not find the Wikipedia page. Please try again.");
+  }
+});
+
+// Feature 8: Weather
+bot.onText(/\/weather (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  const city = match[1];
+
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`
+    );
+    const data = response.data;
+    const weatherMessage = `
+Weather in ${data.name}:
+Temperature: ${data.main.temp}°C
+Condition: ${data.weather[0].description}
+Humidity: ${data.main.humidity}%
+Wind Speed: ${data.wind.speed} m/s
+    `;
+    bot.sendMessage(chatId, weatherMessage);
+  } catch (error) {
+    bot.sendMessage(chatId, "Could not fetch weather data. Please check the city name and try again.");
+  }
+});
+
+// Feature 9: Generate Webpage
 bot.onText(/\/generate_webpage/, async (msg) => {
   const chatId = msg.chat.id;
   const projectId = uuidv4(); // Unique ID for the project
@@ -179,28 +320,6 @@ console.log("Hello from JavaScript!");
   archive.pipe(output);
   archive.directory(projectPath, false);
   archive.finalize();
-});
-
-// Command: Fetch weather information
-bot.onText(/\/weather (.+)/, async (msg, match) => {
-  const chatId = msg.chat.id;
-  const city = match[1];
-
-  try {
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`
-    );
-    const data = response.data;
-    const weatherMessage = `
-Weather in ${data.name}:
-Temperature: ${data.main.temp}°C
-Condition: ${data.weather[0].description}
-Humidity: ${data.main.humidity}%
-    `;
-    bot.sendMessage(chatId, weatherMessage);
-  } catch (error) {
-    bot.sendMessage(chatId, "Could not fetch weather data. Please try again.");
-  }
 });
 
 // Health check endpoint
