@@ -142,7 +142,7 @@ bot.on("message", async (msg) => {
     chatHistory[chatId].push({ role: "user", content: userInput });
 
     // Call Phind API with full chat history
-    const systemPrompt = customPrompts[chatId] || "Be helpful, funny, and friendly in Hinglish...";
+    const systemPrompt = customPrompts[chatId] || "Be helpful, funny, and friendly chat in Hinglish and your language is hindi...";
     const response = await generate(chatHistory[chatId], systemPrompt, "Phind-34B");
 
     // Add bot's response to chat history
