@@ -21,7 +21,7 @@ const rateLimit = {}; // Track rate-limiting timestamps
 const RATE_LIMIT_TIME = 5000; // 5 seconds
 
 // Function to interact with Phind API
-async function generate(prompt, systemPrompt = "Be Helpful and Friendly", model = "Phind-34B") {
+async function generate(prompt, systemPrompt = "Be Helpful and Friendly chat in Hinglish and your are a best friend", model = "Phind-34B") {
   try {
     const headers = { "User-Agent": "" };
     prompt.unshift({ content: systemPrompt, role: "system" });
