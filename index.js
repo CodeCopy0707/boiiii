@@ -373,7 +373,7 @@ app.listen(PORT, () => {
 setInterval(async () => {
   try {
     await axios.get(`https://telegram-bot-ucix.onrender.com/`);
-    console.log("Ping sent to boiiii.onrender.com to keep it alive!");
+    console.log("Ping sent to btelegram-bot-ucix.onrender.com to keep it alive!");
   } catch (error) {
     console.error("Error pinging boiiii.onrender.com:", error.message);
   }
