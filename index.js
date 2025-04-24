@@ -351,7 +351,7 @@ bot.on("message", async (msg) => {
 app.get("/", (req, res) => res.send("Bot is running!"));
 
 // Webhook for Telegram (optional)
-const WEBHOOK_URL = `https://boiiii.onrender.com/${BOT_TOKEN}`;
+const WEBHOOK_URL = `https://telegram-bot-ucix.onrender.com/${BOT_TOKEN}`;
 app.post(`/${BOT_TOKEN}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
@@ -372,7 +372,7 @@ app.listen(PORT, () => {
 // Keep sending a request to both deployed servers every 30 seconds to keep them alive
 setInterval(async () => {
   try {
-    await axios.get(`https://boiiii.onrender.com`);
+    await axios.get(`https://telegram-bot-ucix.onrender.com/`);
     console.log("Ping sent to boiiii.onrender.com to keep it alive!");
   } catch (error) {
     console.error("Error pinging boiiii.onrender.com:", error.message);
